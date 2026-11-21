@@ -1,0 +1,608 @@
+
+---
+
+## 2. Split Code Files (`index.html`, `styles.css`, `app.js`)
+
+### File A: `index.html`
+
+```html
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CodeSnap Studio — Code to Image Generator</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Inter + Monospace Coding Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Source+Code+Pro:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Highlight.js Core & Languages -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/typescript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/rust.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/sql.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/yaml.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/php.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/ruby.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/swift.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/kotlin.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/scss.min.js"></script>
+
+  <!-- html-to-image for PNG / SVG / Clipboard export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.min.js"></script>
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body class="stage-grid text-zinc-100 min-h-screen flex flex-col">
+
+  <!-- Top Studio Header Bar -->
+  <header class="sticky top-0 z-30 backdrop-blur-xl bg-zinc-950/85 border-b border-white/[0.08] px-4 lg:px-6 py-3">
+    <div class="max-w-[1600px] mx-auto flex flex-wrap items-center justify-between gap-3">
+      <!-- Brand -->
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-500 via-fuchsia-500 to-amber-400 flex items-center justify-center shadow-lg shadow-violet-500/25">
+          <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8 9l-3 3 3 3m8-6l3 3-3 3M14 4l-4 16" />
+          </svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-sm sm:text-base font-semibold tracking-tight text-white">CodeSnap Studio</h1>
+            <span class="text-[10px] font-medium uppercase tracking-wider px-2 py-0.5 rounded-full bg-violet-500/15 text-violet-300 border border-violet-500/30">
+              codeimg style
+            </span>
+          </div>
+          <p class="text-[11px] text-zinc-400 hidden sm:block">
+            Auto-detects language &amp; file extension • Click tab name to rename • Crisp PNG &amp; SVG export
+          </p>
+        </div>
+      </div>
+
+      <!-- Studio Vibe Presets -->
+      <div id="vibePresetsRow" class="hidden xl:flex items-center gap-1.5 bg-zinc-900/90 border border-white/[0.07] rounded-xl p-1">
+        <span class="text-[11px] font-medium text-zinc-400 px-2">Vibes:</span>
+        <button type="button" data-vibe="sunset" class="vibe-btn px-2.5 py-1 rounded-lg text-xs font-medium text-zinc-300 hover:text-white hover:bg-white/[0.07] transition cursor-pointer">Sunset</button>
+        <button type="button" data-vibe="cyber" class="vibe-btn px-2.5 py-1 rounded-lg text-xs font-medium text-zinc-300 hover:text-white hover:bg-white/[0.07] transition cursor-pointer">Cyber</button>
+        <button type="button" data-vibe="nordic" class="vibe-btn px-2.5 py-1 rounded-lg text-xs font-medium text-zinc-300 hover:text-white hover:bg-white/[0.07] transition cursor-pointer">Nordic</button>
+        <button type="button" data-vibe="tokyo" class="vibe-btn px-2.5 py-1 rounded-lg text-xs font-medium text-zinc-300 hover:text-white hover:bg-white/[0.07] transition cursor-pointer">Tokyo</button>
+        <button type="button" data-vibe="daylight" class="vibe-btn px-2.5 py-1 rounded-lg text-xs font-medium text-zinc-300 hover:text-white hover:bg-white/[0.07] transition cursor-pointer">Daylight</button>
+      </div>
+
+      <!-- Action Controls -->
+      <div class="flex items-center gap-2">
+        <button
+          id="btnReset"
+          type="button"
+          title="Reset to default settings"
+          class="px-3 py-2 rounded-xl text-xs font-medium bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border border-white/[0.08] transition cursor-pointer"
+        >
+          Reset
+        </button>
+
+        <button
+          id="btnCopyImage"
+          type="button"
+          class="px-3.5 py-2 rounded-xl text-xs font-medium bg-zinc-800 hover:bg-zinc-700 text-white border border-white/[0.1] flex items-center gap-1.5 transition cursor-pointer"
+        >
+          <svg class="w-3.5 h-3.5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="9" y="9" width="13" height="13" rx="2" />
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+          </svg>
+          <span>Copy Image</span>
+        </button>
+
+        <button
+          id="btnExportSvg"
+          type="button"
+          class="px-3 py-2 rounded-xl text-xs font-medium bg-zinc-800 hover:bg-zinc-700 text-zinc-100 border border-white/[0.1] transition cursor-pointer"
+        >
+          SVG
+        </button>
+
+        <div class="flex items-center rounded-xl overflow-hidden shadow-lg shadow-violet-600/25">
+          <button
+            id="btnExportPng"
+            type="button"
+            class="px-3.5 py-2 text-xs font-semibold bg-violet-600 hover:bg-violet-500 text-white flex items-center gap-1.5 transition cursor-pointer"
+          >
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V3" />
+            </svg>
+            <span>Export PNG</span>
+          </button>
+          <select
+            id="exportScaleSelect"
+            aria-label="Export resolution scale"
+            class="bg-violet-700 hover:bg-violet-600 text-white text-xs font-semibold px-2 py-2 border-l border-white/15 focus:outline-none cursor-pointer"
+          >
+            <option value="1" class="bg-zinc-900 text-white">1x</option>
+            <option value="2" selected class="bg-zinc-900 text-white">2x</option>
+            <option value="4" class="bg-zinc-900 text-white">4x</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <div class="flex-1 max-w-[1600px] w-full mx-auto grid grid-cols-1 lg:grid-cols-[340px_1fr] min-h-0">
+
+    <!-- Left Customization Sidebar -->
+    <aside class="bg-zinc-950/75 border-b lg:border-b-0 lg:border-r border-white/[0.08] p-4 sm:p-5 space-y-6 overflow-y-auto lg:max-h-[calc(100vh-61px)]">
+
+      <!-- Section 1: File, Auto-Detect & Syntax -->
+      <section class="space-y-3.5">
+        <div class="flex items-center justify-between">
+          <h2 class="text-[11px] font-semibold uppercase tracking-wider text-zinc-400">File &amp; Syntax</h2>
+          <span id="extBadge" class="text-[11px] font-mono px-2 py-0.5 rounded-md bg-violet-500/15 text-violet-300 border border-violet-500/25">.jsx</span>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label for="windowTitleInput" class="text-xs font-medium text-zinc-300">Active Tab Filename</label>
+            <button
+              id="btnAutoDetectNow"
+              type="button"
+              class="text-[11px] text-violet-300 hover:text-violet-200 underline underline-offset-2 cursor-pointer"
+            >
+              Auto-detect code
+            </button>
+          </div>
+          <input
+            id="windowTitleInput"
+            type="text"
+            value="index.jsx"
+            placeholder="e.g. index.jsx, app.py, main.go"
+            class="w-full bg-zinc-900 border border-white/[0.1] focus:border-violet-500 rounded-xl px-3 py-2 text-xs font-mono text-zinc-100 placeholder-zinc-600 focus:outline-none transition"
+          />
+        </div>
+
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <label for="languageSelect" class="text-xs font-medium text-zinc-300">Language</label>
+              <button
+                id="btnUnlockAutoLang"
+                type="button"
+                title="Re-enable automatic language detection when typing or pasting code"
+                class="hidden text-[10px] px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30 cursor-pointer"
+              >
+                Pinned • Auto
+              </button>
+            </div>
+            <select
+              id="languageSelect"
+              class="w-full bg-zinc-900 border border-white/[0.1] focus:border-violet-500 rounded-xl px-2.5 py-2 text-xs text-zinc-100 focus:outline-none cursor-pointer"
+            >
+              <option value="javascript">JavaScript / JSX</option>
+              <option value="typescript">TypeScript / TSX</option>
+              <option value="python">Python</option>
+              <option value="html">HTML / XML</option>
+              <option value="css">CSS</option>
+              <option value="scss">SCSS</option>
+              <option value="json">JSON</option>
+              <option value="bash">Bash / Shell</option>
+              <option value="rust">Rust</option>
+              <option value="go">Go</option>
+              <option value="java">Java</option>
+              <option value="cpp">C / C++</option>
+              <option value="sql">SQL</option>
+              <option value="markdown">Markdown</option>
+              <option value="yaml">YAML</option>
+              <option value="php">PHP</option>
+              <option value="ruby">Ruby</option>
+              <option value="swift">Swift</option>
+              <option value="kotlin">Kotlin</option>
+              <option value="plaintext">Plain Text</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="themeSelect" class="block text-xs font-medium text-zinc-300 mb-1.5">Color Theme</label>
+            <select
+              id="themeSelect"
+              class="w-full bg-zinc-900 border border-white/[0.1] focus:border-violet-500 rounded-xl px-2.5 py-2 text-xs text-zinc-100 focus:outline-none cursor-pointer"
+            >
+              <option value="github-dark">GitHub Dark</option>
+              <option value="dracula">Dracula</option>
+              <option value="night-owl">Night Owl</option>
+              <option value="monokai">Monokai</option>
+              <option value="nord">Nord</option>
+              <option value="tokyo-night">Tokyo Night</option>
+              <option value="synthwave">SynthWave '84</option>
+              <option value="solarized-light">Solarized Light</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 2: Window Chrome & Toggles -->
+      <section class="space-y-3.5 pt-4 border-t border-white/[0.07]">
+        <h2 class="text-[11px] font-semibold uppercase tracking-wider text-zinc-400">Window Frame</h2>
+
+        <div>
+          <span class="block text-xs font-medium text-zinc-300 mb-1.5">Traffic Lights</span>
+          <div id="trafficStyleGroup" class="grid grid-cols-4 gap-1.5 bg-zinc-900 p-1 rounded-xl border border-white/[0.07]">
+            <button type="button" data-controls="filled" title="Filled Dots" aria-label="Filled Traffic Lights" class="ctrl-btn py-2 rounded-lg flex items-center justify-center gap-1 bg-violet-600 text-white cursor-pointer">
+              <span class="w-2.5 h-2.5 rounded-full bg-[#ff5f56] inline-block"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-[#ffbd2e] inline-block"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-[#27c93f] inline-block"></span>
+            </button>
+            <button type="button" data-controls="outline" title="Outline Dots" aria-label="Outline Traffic Lights" class="ctrl-btn py-2 rounded-lg flex items-center justify-center gap-1 text-zinc-400 hover:text-white cursor-pointer">
+              <span class="w-2.5 h-2.5 rounded-full border-[1.5px] border-[#ff5f56] inline-block"></span>
+              <span class="w-2.5 h-2.5 rounded-full border-[1.5px] border-[#ffbd2e] inline-block"></span>
+              <span class="w-2.5 h-2.5 rounded-full border-[1.5px] border-[#27c93f] inline-block"></span>
+            </button>
+            <button type="button" data-controls="grayscale" title="Monochrome Dots" aria-label="Monochrome Traffic Lights" class="ctrl-btn py-2 rounded-lg flex items-center justify-center gap-1 text-zinc-400 hover:text-white cursor-pointer">
+              <span class="w-2.5 h-2.5 rounded-full bg-zinc-400/50 border border-zinc-400/70 inline-block"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-zinc-400/50 border border-zinc-400/70 inline-block"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-zinc-400/50 border border-zinc-400/70 inline-block"></span>
+            </button>
+            <button type="button" data-controls="hidden" title="Hidden" aria-label="Hide Traffic Lights" class="ctrl-btn py-2 rounded-lg flex items-center justify-center text-[11px] font-medium text-zinc-400 hover:text-white cursor-pointer">
+              None
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <div class="flex justify-between text-xs mb-1">
+              <span class="text-zinc-300 font-medium">Corner Radius</span>
+              <span id="radiusValue" class="font-mono text-zinc-400">14px</span>
+            </div>
+            <input id="radiusSlider" type="range" min="0" max="28" value="14" class="w-full accent-violet-500 cursor-pointer" />
+          </div>
+          <div>
+            <div class="flex justify-between text-xs mb-1">
+              <span class="text-zinc-300 font-medium">Drop Shadow</span>
+              <span id="shadowValue" class="font-mono text-zinc-400">High</span>
+            </div>
+            <input id="shadowSlider" type="range" min="0" max="3" step="1" value="2" class="w-full accent-violet-500 cursor-pointer" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2.5 pt-1">
+          <div class="flex items-center justify-between bg-zinc-900/90 border border-white/[0.07] rounded-xl px-3 py-2">
+            <span class="text-xs font-medium text-zinc-300">File Logo</span>
+            <button
+              id="toggleFileLogo"
+              type="button"
+              role="switch"
+              aria-checked="true"
+              class="w-10 h-5 rounded-full bg-violet-600 p-0.5 transition-colors cursor-pointer flex items-center"
+            >
+              <span id="knobFileLogo" class="w-4 h-4 rounded-full bg-white shadow transform translate-x-5 transition-transform"></span>
+            </button>
+          </div>
+          <div class="flex items-center justify-between bg-zinc-900/90 border border-white/[0.07] rounded-xl px-3 py-2">
+            <span class="text-xs font-medium text-zinc-300">Watermark</span>
+            <button
+              id="toggleWatermark"
+              type="button"
+              role="switch"
+              aria-checked="true"
+              class="w-10 h-5 rounded-full bg-violet-600 p-0.5 transition-colors cursor-pointer flex items-center"
+            >
+              <span id="knobWatermark" class="w-4 h-4 rounded-full bg-white shadow transform translate-x-5 transition-transform"></span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 3: Line Numbers & Typography -->
+      <section class="space-y-3.5 pt-4 border-t border-white/[0.07]">
+        <h2 class="text-[11px] font-semibold uppercase tracking-wider text-zinc-400">Lines &amp; Typography</h2>
+
+        <div class="bg-zinc-900/90 border border-white/[0.07] rounded-xl p-3 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <div>
+              <span class="text-xs font-medium text-zinc-200 block">Line Numbering</span>
+              <span id="lineNumStatusText" class="text-[10px] text-emerald-400">Enabled • Auto-aligned per line</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <button
+                id="btnAddRemoveLines"
+                type="button"
+                class="px-2 py-1 rounded-lg text-[11px] font-medium bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-white/[0.08] transition cursor-pointer"
+              >
+                Remove
+              </button>
+              <button
+                id="toggleLineNumbers"
+                type="button"
+                role="switch"
+                aria-checked="true"
+                class="w-10 h-5 rounded-full bg-violet-600 p-0.5 transition-colors cursor-pointer flex items-center"
+              >
+                <span id="knobLineNumbers" class="w-4 h-4 rounded-full bg-white shadow transform translate-x-5 transition-transform"></span>
+              </button>
+            </div>
+          </div>
+
+          <div id="startLineRow" class="flex items-center justify-between pt-2 border-t border-white/[0.06]">
+            <label for="startLineInput" class="text-[11px] font-medium text-zinc-300">Start Line #</label>
+            <input
+              id="startLineInput"
+              type="number"
+              min="1"
+              max="99999"
+              value="1"
+              class="w-20 bg-zinc-950 border border-white/[0.1] focus:border-violet-500 rounded-lg px-2 py-1 text-xs font-mono text-zinc-100 text-right focus:outline-none"
+            />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label for="fontFamilySelect" class="block text-xs font-medium text-zinc-300 mb-1.5">Font Family</label>
+            <select
+              id="fontFamilySelect"
+              class="w-full bg-zinc-900 border border-white/[0.1] focus:border-violet-500 rounded-xl px-2.5 py-2 text-xs text-zinc-100 focus:outline-none cursor-pointer"
+            >
+              <option value="jetbrains">JetBrains Mono</option>
+              <option value="fira">Fira Code</option>
+              <option value="source">Source Code Pro</option>
+              <option value="mono">System Mono</option>
+            </select>
+          </div>
+
+          <div>
+            <div class="flex justify-between text-xs mb-1.5">
+              <label for="fontSizeSlider" class="text-zinc-300 font-medium">Font Size</label>
+              <span id="fontSizeValue" class="font-mono text-zinc-400">14px</span>
+            </div>
+            <input id="fontSizeSlider" type="range" min="11" max="22" value="14" class="w-full accent-violet-500 cursor-pointer mt-1.5" />
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 4: Background & Canvas -->
+      <section class="space-y-3.5 pt-4 border-t border-white/[0.07]">
+        <div class="flex items-center justify-between">
+          <h2 class="text-[11px] font-semibold uppercase tracking-wider text-zinc-400">Background &amp; Canvas</h2>
+          <div class="flex items-center gap-2">
+            <button
+              id="btnNoBg"
+              type="button"
+              class="text-[11px] font-medium px-2 py-0.5 rounded-md bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border border-white/[0.1] transition cursor-pointer"
+            >
+              No BG
+            </button>
+            <button
+              id="btnShuffleBg"
+              type="button"
+              class="text-[11px] font-medium text-violet-300 hover:text-violet-200 cursor-pointer"
+            >
+              Shuffle
+            </button>
+          </div>
+        </div>
+
+        <div id="bgSwatchesGrid" class="grid grid-cols-6 gap-2"></div>
+
+        <div class="bg-zinc-900/90 border border-white/[0.07] rounded-xl p-3 space-y-2.5">
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-[11px] font-medium text-zinc-300">Custom Gradient</span>
+            <div class="flex items-center gap-1.5">
+              <input id="gradColorA" type="color" value="#f97316" aria-label="Gradient start color" class="w-6 h-6 rounded cursor-pointer bg-transparent border-0" />
+              <input id="gradColorB" type="color" value="#ec4899" aria-label="Gradient end color" class="w-6 h-6 rounded cursor-pointer bg-transparent border-0" />
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between text-[11px] mb-1">
+              <label for="gradAngleSlider" class="text-zinc-400">Gradient Angle</label>
+              <span id="gradAngleValue" class="font-mono text-zinc-300">135°</span>
+            </div>
+            <input id="gradAngleSlider" type="range" min="0" max="360" value="135" class="w-full accent-violet-500 cursor-pointer" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <div class="flex justify-between text-xs mb-1">
+              <label for="paddingSlider" class="text-zinc-300 font-medium">Padding</label>
+              <span id="paddingValue" class="font-mono text-zinc-400">56px</span>
+            </div>
+            <input id="paddingSlider" type="range" min="16" max="128" step="4" value="56" class="w-full accent-violet-500 cursor-pointer" />
+          </div>
+          <div>
+            <label for="aspectSelectControl" class="block text-xs font-medium text-zinc-300 mb-1">Aspect Ratio</label>
+            <select
+              id="aspectSelectControl"
+              class="w-full bg-zinc-900 border border-white/[0.1] focus:border-violet-500 rounded-xl px-2.5 py-1.5 text-xs text-zinc-100 focus:outline-none cursor-pointer"
+            >
+              <option value="auto">Auto Fit</option>
+              <option value="16/9">16:9 Wide</option>
+              <option value="4/5">4:5 Portrait</option>
+              <option value="1/1">1:1 Square</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 5: Batch Numerical Sequence Generator -->
+      <section class="space-y-3 pt-4 border-t border-white/[0.07]">
+        <div class="flex items-center justify-between">
+          <h2 class="text-[11px] font-semibold uppercase tracking-wider text-zinc-400">Batch Number Sequence</h2>
+          <span id="batchCountBadge" class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/25">
+            Ready
+          </span>
+        </div>
+
+        <div class="bg-zinc-900/90 border border-white/[0.07] rounded-xl p-3 space-y-2.5">
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label for="batchNumberSelect" class="text-[11px] font-medium text-zinc-300">Target Number in Code</label>
+              <button
+                id="btnRefreshBatchNumbers"
+                type="button"
+                class="text-[10px] text-violet-300 hover:text-violet-200 cursor-pointer"
+              >
+                Scan code
+              </button>
+            </div>
+            <select
+              id="batchNumberSelect"
+              class="w-full bg-zinc-950 border border-white/[0.1] focus:border-violet-500 rounded-lg px-2 py-1.5 text-xs font-mono text-zinc-100 focus:outline-none cursor-pointer"
+            ></select>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2">
+            <div>
+              <label for="batchStartInput" class="block text-[10px] text-zinc-400 mb-1">Start</label>
+              <input
+                id="batchStartInput"
+                type="number"
+                value="1"
+                class="w-full bg-zinc-950 border border-white/[0.1] focus:border-violet-500 rounded-lg px-2 py-1 text-xs font-mono text-zinc-100 focus:outline-none"
+              />
+            </div>
+            <div>
+              <label for="batchStepInput" class="block text-[10px] text-zinc-400 mb-1">Step</label>
+              <input
+                id="batchStepInput"
+                type="number"
+                value="1"
+                class="w-full bg-zinc-950 border border-white/[0.1] focus:border-violet-500 rounded-lg px-2 py-1 text-xs font-mono text-zinc-100 focus:outline-none"
+              />
+            </div>
+            <div>
+              <label for="batchCountInput" class="block text-[10px] text-zinc-400 mb-1">Images</label>
+              <input
+                id="batchCountInput"
+                type="number"
+                min="2"
+                max="15"
+                value="3"
+                class="w-full bg-zinc-950 border border-white/[0.1] focus:border-violet-500 rounded-lg px-2 py-1 text-xs font-mono text-zinc-100 focus:outline-none"
+              />
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between pt-1">
+            <label class="inline-flex items-center gap-1.5 text-[11px] text-zinc-400 cursor-pointer">
+              <input id="batchReplaceAllSame" type="checkbox" class="rounded accent-violet-500 cursor-pointer" />
+              <span>Match all identical values</span>
+            </label>
+            <span id="batchPreviewRange" class="text-[10px] font-mono text-zinc-400">1 → 2 → 3</span>
+          </div>
+
+          <button
+            id="btnGenerateBatch"
+            type="button"
+            class="w-full py-2 px-3 rounded-xl text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white shadow-md shadow-emerald-600/20 transition cursor-pointer flex items-center justify-center gap-1.5"
+          >
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+            </svg>
+            <span>Generate Sequence PNGs</span>
+          </button>
+
+          <div id="batchProgressWrap" class="hidden space-y-1.5 pt-1">
+            <div class="flex justify-between text-[10px] font-mono text-zinc-300">
+              <span id="batchProgressLabel">Rendering...</span>
+              <span id="batchProgressPct">0%</span>
+            </div>
+            <div class="w-full h-1.5 rounded-full bg-zinc-800 overflow-hidden">
+              <div id="batchProgressBar" class="h-full bg-emerald-400 transition-all duration-150" style="width: 0%;"></div>
+            </div>
+          </div>
+
+          <div id="batchResultsList" class="space-y-1.5 max-h-40 overflow-y-auto pt-1"></div>
+        </div>
+      </section>
+    </aside>
+
+    <!-- Right Preview Canvas Area -->
+    <main class="flex-1 flex flex-col items-center justify-center p-4 sm:p-8 lg:p-10 min-w-0">
+
+      <!-- Export Capture Container -->
+      <div
+        id="exportCanvas"
+        class="relative flex items-center justify-center transition-all duration-200 max-w-full"
+        style="padding: 56px; background: linear-gradient(135deg, #f97316 0%, #ef4444 50%, #db2777 100%);"
+      >
+        <!-- Code Window -->
+        <div
+          id="codeWindow"
+          class="code-window theme-github-dark relative w-full max-w-[680px] min-w-[300px] sm:min-w-[440px] overflow-hidden"
+          style="border-radius: 14px; box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.65);"
+        >
+          <!-- Tabbed macOS Header -->
+          <div id="windowHeader" class="mac-window-header tl-style-filled">
+            <div id="trafficLights" class="mac-traffic-lights" aria-hidden="true">
+              <span class="tl-dot tl-dot-red"><span class="tl-glyph">×</span></span>
+              <span class="tl-dot tl-dot-yellow"><span class="tl-glyph">−</span></span>
+              <span class="tl-dot tl-dot-green"><span class="tl-glyph">+</span></span>
+            </div>
+            <div id="tabsContainer" class="mac-tabs-container"></div>
+          </div>
+
+          <!-- Editor Body with Dynamic Line-Height-Matched Gutter -->
+          <div id="editorFlexRow" class="editor-flex-row">
+            <div id="lineNumbersCol" class="line-numbers-col" aria-hidden="true"></div>
+
+            <div class="code-body-col">
+              <pre id="codeLinesMeasure" class="code-lines-measure" aria-hidden="true"></pre>
+              <textarea
+                id="codeEditor"
+                class="code-edit-textarea"
+                spellcheck="false"
+                autocapitalize="off"
+                autocomplete="off"
+                autocorrect="off"
+                aria-label="Editable code snippet"
+              ></textarea>
+            </div>
+          </div>
+
+          <!-- Optional Subtle Corner Watermark -->
+          <div id="windowWatermark" class="window-watermark" aria-hidden="true">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M4 8c2.5-2.5 5.5-2.5 8 0s5.5 2.5 8 0" stroke-linecap="round" />
+              <path d="M4 13c2.5-2.5 5.5-2.5 8 0s5.5 2.5 8 0" stroke-linecap="round" />
+              <path d="M4 18c2.5-2.5 5.5-2.5 8 0s5.5 2.5 8 0" stroke-linecap="round" />
+            </svg>
+            <span>CodeSnap</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Subtle Canvas Metadata Bar -->
+      <div class="mt-4 flex flex-wrap items-center justify-center gap-3 text-[11px] text-zinc-400">
+        <span id="canvasDimensionsLabel" class="font-mono">Calculating size...</span>
+        <span>•</span>
+        <span>Tip: Paste code to auto-match extension &amp; syntax, or click a tab filename to rename</span>
+      </div>
+    </main>
+  </div>
+
+  <!-- Toast Notification -->
+  <div
+    id="toastBanner"
+    role="status"
+    aria-live="polite"
+    class="fixed bottom-5 right-5 z-50 pointer-events-none opacity-0 translate-y-2 transition-all duration-200 px-4 py-2.5 rounded-xl bg-zinc-900/95 border border-white/15 text-xs font-medium text-white shadow-2xl flex items-center gap-2"
+  >
+    <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+    <span id="toastText">Done</span>
+  </div>
+
+  <!-- Application Logic -->
+  <script src="./app.js"></script>
+</body>
+</html>
