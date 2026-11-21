@@ -33,7 +33,7 @@ No build step or `npm install` is required—everything runs natively in the bro
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/YOUR_USERNAME/codesnap.git
+   git clone https://github.com/vishallpanwarr/codesnap.git
    cd codesnap
    ```
 
@@ -48,7 +48,7 @@ No build step or `npm install` is required—everything runs natively in the bro
 2. Go to **Settings → Pages** in your repository.
 3. Under **Build and deployment → Source**, select **Deploy from a branch**.
 4. Choose `main` (or `master`) and `/ (root)`, then click **Save**.
-5. Your live site will be available at `https://YOUR_USERNAME.github.io/codesnap/`.
+5. Your live site will be available at `https://vishallpanwarr.github.io/codesnap/`.
 
 ## Built With
 
