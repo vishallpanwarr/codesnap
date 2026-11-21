@@ -1,4 +1,3 @@
-<img width="632" height="287" alt="preview" src="https://github.com/user-attachments/assets/4e3644df-955d-4db3-b2c7-5945aeb05b00" />
 # CodeSnap Studio ✨
 
 A sleek, browser-based **code-to-image generator** inspired by `codeimg.io`. Turn code snippets into crisp, customizable screenshots with automatic language/extension detection, multi-tab macOS window chrome, transparent background support, and batch numerical sequence rendering.
@@ -26,6 +25,8 @@ A sleek, browser-based **code-to-image generator** inspired by `codeimg.io`. Tur
 ├── app.js       # Editor state, auto-detection engine, batch renderer, and html-to-image export
 └── README.md    # Documentation
 ```
+
+<img width="632" height="287" alt="preview" src="https://github.com/user-attachments/assets/4e3644df-955d-4db3-b2c7-5945aeb05b00" />
 
 ## Getting Started
 
